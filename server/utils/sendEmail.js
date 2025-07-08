@@ -16,11 +16,11 @@ const createTransporter = () => {
 // Email templates
 const templates = {
   welcome: (data) => ({
-    subject: 'Welcome to Auto X!',
+    subject: 'Welcome to Auto X Sri Lanka!',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #f97316;">Welcome to Auto X, ${data.name}!</h2>
-        <p>Thank you for joining Auto X, your trusted partner for construction materials and vehicle rentals.</p>
+        <h2 style="color: #f97316;">Welcome to Auto X Sri Lanka, ${data.name}!</h2>
+        <p>Thank you for joining Auto X Sri Lanka, your trusted partner for construction materials and vehicle rentals.</p>
         <p>You can now:</p>
         <ul>
           <li>Browse premium construction materials</li>
@@ -29,7 +29,7 @@ const templates = {
           <li>Access 24/7 customer support</li>
         </ul>
         <p>If you have any questions, feel free to contact our support team.</p>
-        <p>Best regards,<br>The Auto X Team</p>
+        <p>Best regards,<br>The Auto X Sri Lanka Team</p>
       </div>
     `
   }),
@@ -48,7 +48,7 @@ const templates = {
           <p><strong>Required Date:</strong> ${new Date(data.requiredDate).toLocaleDateString()}</p>
         </div>
         <p>We'll contact you soon with updates on your request.</p>
-        <p>Best regards,<br>The Auto X Team</p>
+        <p>Best regards,<br>The Auto X Sri Lanka Team</p>
       </div>
     `
   }),
@@ -61,7 +61,7 @@ const templates = {
         <p>Your order <strong>${data.orderNumber}</strong> status has been updated to: <strong>${data.status.toUpperCase()}</strong></p>
         ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ''}
         <p>You can track your order status in your account dashboard.</p>
-        <p>Best regards,<br>The Auto X Team</p>
+        <p>Best regards,<br>The Auto X Sri Lanka Team</p>
       </div>
     `
   })
@@ -82,7 +82,7 @@ const sendEmail = async (options) => {
     }
 
     const mailOptions = {
-      from: `Auto X <${process.env.EMAIL_USER}>`,
+      from: `Auto X Sri Lanka <${process.env.EMAIL_USER}>`,
       to: options.to,
       subject: emailContent.subject,
       html: emailContent.html

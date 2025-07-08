@@ -122,7 +122,7 @@ router.post('/', auth, [
     try {
       await sendEmail({
         to: req.user.email,
-        subject: 'Service Request Confirmation - Auto X',
+        subject: 'Service Request Confirmation - Auto X Sri Lanka',
         template: 'serviceRequestConfirmation',
         data: {
           orderNumber: serviceRequest.tracking.orderNumber,
@@ -327,7 +327,7 @@ router.put('/:id/status', auth, [
     try {
       await sendEmail({
         to: serviceRequest.user.email,
-        subject: `Service Request ${status.toUpperCase()} - Auto X`,
+        subject: `Service Request ${status.toUpperCase()} - Auto X Sri Lanka`,
         template: 'statusUpdate',
         data: {
           orderNumber: serviceRequest.tracking.orderNumber,

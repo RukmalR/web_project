@@ -87,8 +87,8 @@ export const ContactPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-bold text-xl text-gray-900 mb-2">Phone Support</h3>
-                    <p className="text-gray-600 mb-2">+1 (555) 123-4567</p>
-                    <p className="text-gray-600 mb-2">+1 (555) 987-6543 (Emergency)</p>
+                    <p className="text-gray-600 mb-2">+94 76 1098385</p>
+                    <p className="text-gray-600 mb-2">+94 76 1098385 (Emergency)</p>
                     <p className="text-sm text-gray-500">Available 24/7 for urgent requests</p>
                   </div>
                 </div>
@@ -99,9 +99,9 @@ export const ContactPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-bold text-xl text-gray-900 mb-2">Email Support</h3>
-                    <p className="text-gray-600 mb-2">info@autox.com</p>
-                    <p className="text-gray-600 mb-2">sales@autox.com</p>
-                    <p className="text-gray-600 mb-2">support@autox.com</p>
+                    <p className="text-gray-600 mb-2">info@autox.lk</p>
+                    <p className="text-gray-600 mb-2">sales@autox.lk</p>
+                    <p className="text-gray-600 mb-2">support@autox.lk</p>
                     <p className="text-sm text-gray-500">Response within 2 hours during business hours</p>
                   </div>
                 </div>
@@ -112,9 +112,9 @@ export const ContactPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-bold text-xl text-gray-900 mb-2">Main Office</h3>
-                    <p className="text-gray-600 mb-2">123 Construction Avenue</p>
-                    <p className="text-gray-600 mb-2">Business District, City 12345</p>
-                    <p className="text-gray-600 mb-2">United States</p>
+                    <p className="text-gray-600 mb-2">No. 245, Lakeview Avenue</p>
+                    <p className="text-gray-600 mb-2">Nugegoda, Colombo 10250</p>
+                    <p className="text-gray-600 mb-2">Sri Lanka</p>
                     <p className="text-sm text-gray-500">Open Mon-Fri: 6:00 AM - 8:00 PM</p>
                   </div>
                 </div>
@@ -185,6 +185,7 @@ export const ContactPage: React.FC = () => {
                       onChange={handleInputChange}
                       required
                       placeholder="+1 (555) 123-4567"
+                      placeholder="+94 76 1098385"
                       className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors"
                     />
                   </div>
@@ -270,8 +271,8 @@ export const ContactPage: React.FC = () => {
                 <MapPin className="text-yellow-600 w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Main Warehouse</h3>
-              <p className="text-gray-600 mb-2">123 Construction Avenue</p>
-              <p className="text-gray-600 mb-2">Business District, City 12345</p>
+              <p className="text-gray-600 mb-2">No. 245, Lakeview Avenue</p>
+              <p className="text-gray-600 mb-2">Nugegoda, Colombo 10250</p>
               <p className="text-sm text-gray-500">Materials & Vehicle Hub</p>
             </div>
 
@@ -280,8 +281,8 @@ export const ContactPage: React.FC = () => {
                 <MapPin className="text-blue-600 w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">North Branch</h3>
-              <p className="text-gray-600 mb-2">456 Industrial Road</p>
-              <p className="text-gray-600 mb-2">North District, City 12346</p>
+              <p className="text-gray-600 mb-2">No. 156, Industrial Road</p>
+              <p className="text-gray-600 mb-2">Kelaniya, Colombo 11500</p>
               <p className="text-sm text-gray-500">Vehicle Rental Center</p>
             </div>
 
@@ -290,8 +291,8 @@ export const ContactPage: React.FC = () => {
                 <MapPin className="text-green-600 w-8 h-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">South Depot</h3>
-              <p className="text-gray-600 mb-2">789 Supply Chain Blvd</p>
-              <p className="text-gray-600 mb-2">South District, City 12347</p>
+              <p className="text-gray-600 mb-2">No. 89, Supply Chain Road</p>
+              <p className="text-gray-600 mb-2">Panadura, Colombo 12500</p>
               <p className="text-sm text-gray-500">Materials Distribution</p>
             </div>
           </div>

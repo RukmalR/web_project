@@ -11,7 +11,7 @@ const seedData = async () => {
     // Create admin user
     const adminUser = await User.create({
       name: 'Admin User',
-      email: 'admin@autox.com',
+      email: 'admin@autox.lk',
       phone: '+1234567890',
       password: 'admin123',
       role: 'admin',
@@ -21,7 +21,7 @@ const seedData = async () => {
     // Create sample customer
     const customer = await User.create({
       name: 'John Doe',
-      email: 'john@example.com',
+      email: 'john@autox.lk',
       phone: '+1234567891',
       password: 'password123',
       role: 'customer',
@@ -31,7 +31,7 @@ const seedData = async () => {
     // Create sample partner users
     const partnerUser1 = await User.create({
       name: 'Mike Johnson',
-      email: 'mike@constructionco.com',
+      email: 'mike@autox.lk',
       phone: '+1234567892',
       password: 'password123',
       role: 'partner',
@@ -40,7 +40,7 @@ const seedData = async () => {
 
     const partnerUser2 = await User.create({
       name: 'Sarah Wilson',
-      email: 'sarah@materialsupply.com',
+      email: 'sarah@autox.lk',
       phone: '+1234567893',
       password: 'password123',
       role: 'partner',
@@ -58,18 +58,18 @@ const seedData = async () => {
       description: 'Professional construction equipment rental with experienced operators.',
       services: ['Excavation Services', 'Transportation', 'Crane Operations'],
       address: {
-        street: '123 Industrial Ave',
-        city: 'Construction City',
-        state: 'CA',
-        zipCode: '90210',
-        country: 'United States'
+        street: 'No. 245, Lakeview Avenue',
+        city: 'Nugegoda',
+        state: 'Western Province',
+        zipCode: '10250',
+        country: 'Sri Lanka'
       },
       contact: {
-        phone: '+1234567892',
-        email: 'mike@constructionco.com',
+        phone: '+94 76 1098385',
+        email: 'mike@autox.lk',
         emergencyContact: {
           name: 'Jane Johnson',
-          phone: '+1234567899',
+          phone: '+94 76 1098385',
           relationship: 'Spouse'
         }
       },
@@ -107,15 +107,15 @@ const seedData = async () => {
       description: 'Premium construction materials supplier with quality guarantee.',
       services: ['Sand Supply', 'Gravel Supply', 'Steel Supply', 'Brick Supply'],
       address: {
-        street: '456 Supply Road',
-        city: 'Material City',
-        state: 'CA',
-        zipCode: '90211',
-        country: 'United States'
+        street: 'No. 156, Industrial Road',
+        city: 'Kelaniya',
+        state: 'Western Province',
+        zipCode: '11500',
+        country: 'Sri Lanka'
       },
       contact: {
-        phone: '+1234567893',
-        email: 'sarah@materialsupply.com'
+        phone: '+94 76 1098385',
+        email: 'sarah@autox.lk'
       },
       insurance: {
         provider: 'Material Insurance Co',

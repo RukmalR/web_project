@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center space-x-6">
               <div className="flex items-center">
                 <Phone className="w-4 h-4 mr-2" />
-                <span>24/7 Support: +1 (555) 123-4567</span>
+                <span>24/7 Support: +94 76 1098385</span>
               </div>
               <span className="hidden md:block">Free delivery on orders over $500</span>
             </div>

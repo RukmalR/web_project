@@ -153,7 +153,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   </div>
                   <div>
                     <div className="font-semibold text-white">Call Us</div>
-                    <div>+1 (555) 123-4567</div>
+                    <div>+94 76 1098385</div>
                     <div className="text-sm text-gray-400">24/7 Support Available</div>
                   </div>
                 </div>
@@ -163,7 +163,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   </div>
                   <div>
                     <div className="font-semibold text-white">Email Us</div>
-                    <div>info@autox.com</div>
+                    <div>info@autox.lk</div>
                     <div className="text-sm text-gray-400">Quick Response Guaranteed</div>
                   </div>
                 </div>
@@ -173,8 +173,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   </div>
                   <div>
                     <div className="font-semibold text-white">Visit Us</div>
-                    <div>123 Construction Avenue</div>
-                    <div className="text-sm text-gray-400">Business District, City</div>
+                    <div>No. 245, Lakeview Avenue</div>
+                    <div className="text-sm text-gray-400">Nugegoda, Colombo 10250</div>
                   </div>
                 </div>
                 <div className="flex items-start">
