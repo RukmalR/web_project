@@ -184,7 +184,6 @@ export const ContactPage: React.FC = () => {
                       value={formData.phone}
                       onChange={handleInputChange}
                       required
-                      placeholder="+1 (555) 123-4567"
                       placeholder="+94 76 1098385"
                       className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors"
                     />

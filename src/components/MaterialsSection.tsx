@@ -103,13 +103,13 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
                   <div className="flex justify-between items-center mb-6">
                     <div>
                       <span className="text-2xl font-bold text-orange-600">
-                        ${item.pricePerUnit}
+                        Rs. {item.pricePerUnit.toLocaleString()}
                       </span>
                       <span className="text-gray-500 text-sm ml-1">per {item.unit}</span>
                     </div>
                     <div className="text-right">
                       <div className="text-sm text-gray-500">Starting from</div>
-                      <div className="text-lg font-semibold text-gray-900">${(item.pricePerUnit * 5).toFixed(0)}</div>
+                      <div className="text-lg font-semibold text-gray-900">Rs. {(item.pricePerUnit * 2).toLocaleString()}</div>
                     </div>
                   </div>
                   
@@ -173,7 +173,7 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
               <div className="bg-gradient-to-r from-orange-50 to-orange-100 p-6 rounded-xl border border-orange-200">
                 <div className="flex justify-between items-center mb-3">
                   <span className="font-medium text-gray-700">Unit Price:</span>
-                  <span className="font-semibold text-gray-900">${selectedItem.pricePerUnit}</span>
+                  <span className="font-semibold text-gray-900">Rs. {selectedItem.pricePerUnit.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center mb-3">
                   <span className="font-medium text-gray-700">Quantity:</span>
@@ -183,7 +183,7 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-lg text-gray-900">Total Estimated Cost:</span>
                     <span className="text-3xl font-bold text-yellow-600">
-                      ${(selectedItem.pricePerUnit * quantity).toFixed(2)}
+                      Rs. {(selectedItem.pricePerUnit * quantity).toLocaleString()}
                     </span>
                   </div>
                 </div>

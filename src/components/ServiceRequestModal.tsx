@@ -96,7 +96,7 @@ export const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({
                     </div>
                     <div className="bg-white rounded-lg p-3">
                       <span className="text-sm text-gray-500">Rate:</span>
-                      <div className="font-semibold text-gray-900">${durationType === 'hours' ? item.pricePerHour : item.pricePerDay} per {durationType?.slice(0, -1)}</div>
+                      <div className="font-semibold text-gray-900">Rs. {(durationType === 'hours' ? item.pricePerHour : item.pricePerDay).toLocaleString()} per {durationType?.slice(0, -1)}</div>
                     </div>
                   </>
                 ) : (
@@ -107,7 +107,7 @@ export const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({
                     </div>
                     <div className="bg-white rounded-lg p-3">
                       <span className="text-sm text-gray-500">Rate:</span>
-                      <div className="font-semibold text-gray-900">${item.pricePerUnit} per {item.unit}</div>
+                      <div className="font-semibold text-gray-900">Rs. {item.pricePerUnit.toLocaleString()} per {item.unit}</div>
                     </div>
                   </>
                 )}
@@ -116,7 +116,7 @@ export const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({
               <div className="mt-4 p-4 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl">
                 <div className="flex justify-between items-center text-white">
                   <span className="font-bold text-lg">Total Estimated Cost:</span>
-                  <span className="text-2xl font-bold">${totalPrice.toFixed(2)}</span>
+                  <span className="text-2xl font-bold">Rs. {totalPrice.toLocaleString()}</span>
                 </div>
               </div>
             </div>

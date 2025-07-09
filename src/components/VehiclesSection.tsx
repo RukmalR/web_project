@@ -136,13 +136,13 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-blue-600">
-                          ${vehicle.pricePerHour}
+                          Rs. {vehicle.pricePerHour.toLocaleString()}
                         </div>
                         <div className="text-sm text-gray-600">per hour</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-blue-600">
-                          ${vehicle.pricePerDay}
+                          Rs. {vehicle.pricePerDay.toLocaleString()}
                         </div>
                         <div className="text-sm text-gray-600">per day</div>
                       </div>
@@ -239,7 +239,7 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
               <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
                 <div className="flex justify-between items-center mb-3">
                   <span className="font-medium text-gray-700">Rate per {durationType.slice(0, -1)}:</span>
-                  <span className="font-semibold text-gray-900">${getPrice(selectedVehicle)}</span>
+                  <span className="font-semibold text-gray-900">Rs. {getPrice(selectedVehicle).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center mb-3">
                   <span className="font-medium text-gray-700">Duration:</span>
@@ -249,7 +249,7 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-lg text-gray-900">Total Estimated Cost:</span>
                     <span className="text-3xl font-bold text-blue-600">
-                      ${(getPrice(selectedVehicle) * duration).toFixed(2)}
+                      Rs. {(getPrice(selectedVehicle) * duration).toLocaleString()}
                     </span>
                   </div>
                 </div>

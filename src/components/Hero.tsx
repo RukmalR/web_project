@@ -148,10 +148,6 @@ export const Hero: React.FC<HeroProps> = ({ onServiceSelect }) => {
                     <div className="text-sm text-gray-600">Premium quality</div>
                   </div>
                   <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4">
-                    <div className="font-semibold text-gray-900">Steel Rods</div>
-                    <div className="text-sm text-gray-600">High strength</div>
-                  </div>
-                  <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4">
                     <div className="font-semibold text-gray-900">Garden Soil</div>
                     <div className="text-sm text-gray-600">Fertile & rich</div>
                   </div>
