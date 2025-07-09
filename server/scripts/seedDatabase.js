@@ -150,8 +150,8 @@ const seedData = async () => {
         type: 'Backhoe Loader',
         model: '3CX',
         year: 2020,
-        pricePerHour: 120.00,
-        pricePerDay: 800.00,
+        pricePerHour: 32000.00,
+        pricePerDay: 210000.00,
         specifications: {
           operatingWeight: '8.5 tons',
           maxDiggingDepth: '5.2m',
@@ -197,8 +197,8 @@ const seedData = async () => {
         type: 'Heavy Duty Truck',
         model: 'FH16',
         year: 2019,
-        pricePerHour: 80.00,
-        pricePerDay: 500.00,
+        pricePerHour: 21000.00,
+        pricePerDay: 135000.00,
         specifications: {
           payload: '25 tons',
           bedLength: '8.5m',
@@ -240,7 +240,7 @@ const seedData = async () => {
         name: 'Premium River Sand',
         description: 'High-quality river sand perfect for construction work. Clean, well-graded sand suitable for concrete mixing and masonry work.',
         category: 'sand',
-        pricePerUnit: 25.00,
+        pricePerUnit: 6500.00,
         unit: 'cubic_meter',
         minimumOrder: 5,
         availableQuantity: 1000,
@@ -267,39 +267,10 @@ const seedData = async () => {
       },
       {
         supplierId: materialPartner.id,
-        name: 'High-Strength Steel Rods',
-        description: 'Premium steel reinforcement bars for construction. High tensile strength and corrosion resistance.',
-        category: 'steel',
-        pricePerUnit: 850.00,
-        unit: 'ton',
-        minimumOrder: 1,
-        availableQuantity: 50,
-        images: [
-          {
-            url: 'https://images.pexels.com/photos/162553/keys-workshop-mechanic-tools-162553.jpeg?auto=compress&cs=tinysrgb&w=800',
-            alt: 'Steel Rods'
-          }
-        ],
-        specifications: {
-          grade: 'Grade 60',
-          strength: '420 MPa',
-          sizes: '8mm to 32mm',
-          standard: 'ASTM A615'
-        },
-        qualityCertifications: ['ASTM Certified', 'Quality Tested'],
-        deliveryAreas: ['Construction City', 'Material City'],
-        deliveryTimeframe: '1-2 business days',
-        isAvailable: true,
-        rating: 4.9,
-        ratingCount: 20,
-        tags: ['steel', 'reinforcement', 'high-strength']
-      },
-      {
-        supplierId: materialPartner.id,
         name: 'Premium Garden Soil',
         description: 'Rich, fertile soil ideal for landscaping and gardening projects. Nutrient-rich composition.',
         category: 'soil',
-        pricePerUnit: 30.00,
+        pricePerUnit: 7500.00,
         unit: 'cubic_meter',
         minimumOrder: 3,
         availableQuantity: 500,
@@ -328,13 +299,13 @@ const seedData = async () => {
         name: 'Red Clay Bricks',
         description: 'Durable clay bricks for construction and masonry work. High compressive strength.',
         category: 'bricks',
-        pricePerUnit: 120.00,
-        unit: 'per_100_pieces',
+        pricePerUnit: 32000.00,
+        unit: 'per_1000_pieces',
         minimumOrder: 500,
         availableQuantity: 10000,
         images: [
           {
-            url: 'https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800',
+            url: 'https://images.pexels.com/photos/1004584/pexels-photo-1004584.jpeg?auto=compress&cs=tinysrgb&w=800',
             alt: 'Clay Bricks'
           }
         ],

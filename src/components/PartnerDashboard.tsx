@@ -118,7 +118,7 @@ export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, veh
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-gray-600 text-sm">Total Earnings</p>
-                    <p className="text-3xl font-bold text-gray-900">${stats.totalEarnings.toLocaleString()}</p>
+                    <p className="text-3xl font-bold text-gray-900">Rs. {(stats.totalEarnings * 265).toLocaleString()}</p>
                   </div>
                   <div className="bg-purple-100 p-3 rounded-xl">
                     <DollarSign className="w-6 h-6 text-purple-600" />
@@ -139,7 +139,7 @@ export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, veh
                         <p className="text-sm text-gray-600">John Construction Co.</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-green-600">$480</p>
+                        <p className="font-semibold text-green-600">Rs. 126,000</p>
                         <p className="text-sm text-gray-500">2 days</p>
                       </div>
                     </div>
@@ -213,8 +213,8 @@ export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, veh
                       <p className="text-gray-600 mb-4">{vehicle.description}</p>
                       <div className="flex justify-between items-center mb-4">
                         <div>
-                          <span className="text-lg font-bold text-orange-600">${vehicle.pricePerHour}/hr</span>
-                          <span className="text-gray-500 ml-2">${vehicle.pricePerDay}/day</span>
+                          <span className="text-lg font-bold text-orange-600">Rs. {vehicle.pricePerHour.toLocaleString()}/hr</span>
+                          <span className="text-gray-500 ml-2">Rs. {vehicle.pricePerDay.toLocaleString()}/day</span>
                         </div>
                       </div>
                       <div className="flex space-x-2">
@@ -254,7 +254,7 @@ export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, veh
                       <p className="text-gray-600 mb-4">{material.description}</p>
                       <div className="flex justify-between items-center mb-4">
                         <div>
-                          <span className="text-lg font-bold text-yellow-600">${material.pricePerUnit}</span>
+                          <span className="text-lg font-bold text-yellow-600">Rs. {material.pricePerUnit.toLocaleString()}</span>
                           <span className="text-gray-500 ml-1">per {material.unit}</span>
                         </div>
                         <span className="text-sm text-gray-500">{material.availableQuantity} {material.unit} available</span>
