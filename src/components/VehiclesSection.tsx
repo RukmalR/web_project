@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { vehicles } from '../data/services';
 import { Vehicle } from '../types';
-import { Calendar, ArrowLeft, Clock, Star, Shield, Wrench, Users } from 'lucide-react';
+import { Calendar, ArrowLeft, Clock, Star, Shield, Wrench, Users, MapPin, Phone, MessageCircle, User, Award } from 'lucide-react';
 
 interface VehiclesSectionProps {
   onBack: () => void;
@@ -22,9 +22,185 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
     }
   };
 
+  const handleCall = (phone: string) => {
+    window.open(`tel:${phone}`, '_self');
+  };
+
+  const handleMessage = (phone: string, supplierName: string, vehicleName: string) => {
+    const message = `Hi ${supplierName}, I'm interested in renting your ${vehicleName}. Can you provide more details?`;
+    const whatsappUrl = `https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   const getPrice = (vehicle: Vehicle) => {
     return durationType === 'hours' ? vehicle.pricePerHour : vehicle.pricePerDay;
   };
+
+  if (selectedVehicle) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <section className="bg-gradient-to-r from-blue-600 to-blue-700 py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <button
+              onClick={() => setSelectedVehicle(null)}
+              className="flex items-center text-white hover:text-blue-200 transition-colors mb-6 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg"
+            >
+              <ArrowLeft size={20} className="mr-2" />
+              Back to Vehicles
+            </button>
+            <h1 className="text-4xl font-bold text-white">{selectedVehicle.name}</h1>
+          </div>
+        </section>
+
+        {/* Vehicle Details */}
+        <section className="py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12">
+              {/* Vehicle Image and Info */}
+              <div>
+                <img 
+                  src={selectedVehicle.image} 
+                  alt={selectedVehicle.name}
+                  className="w-full h-96 object-cover rounded-2xl shadow-lg mb-6"
+                />
+                <div className="bg-white rounded-2xl p-6 shadow-lg">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Vehicle Details</h2>
+                  <p className="text-gray-600 mb-6 leading-relaxed">{selectedVehicle.description}</p>
+                  
+                  <div className="mb-6">
+                    <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
+                      <Wrench className="w-4 h-4 mr-2" />
+                      Specifications:
+                    </h4>
+                    <div className="grid grid-cols-1 gap-2">
+                      {selectedVehicle.specifications.map((spec, index) => (
+                        <div key={index} className="flex items-center text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                          {spec}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 rounded-xl p-4">
+                      <div className="text-sm text-gray-600">Hourly Rate</div>
+                      <div className="text-2xl font-bold text-blue-600">Rs. {selectedVehicle.pricePerHour.toLocaleString()}</div>
+                    </div>
+                    <div className="bg-green-50 rounded-xl p-4">
+                      <div className="text-sm text-gray-600">Daily Rate</div>
+                      <div className="text-2xl font-bold text-green-600">Rs. {selectedVehicle.pricePerDay.toLocaleString()}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Supplier Info and Contact */}
+              <div className="space-y-6">
+                {/* Supplier Card */}
+                <div className="bg-white rounded-2xl p-8 shadow-lg">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900">Vehicle Owner</h2>
+                    <div className="flex items-center bg-blue-100 px-3 py-1 rounded-full">
+                      <Star className="w-4 h-4 text-blue-500 fill-current mr-1" />
+                      <span className="font-semibold text-blue-700">{selectedVehicle.supplier.rating}</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center">
+                      <div className="bg-blue-100 p-2 rounded-lg mr-4">
+                        <User className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900">{selectedVehicle.supplier.name}</div>
+                        <div className="text-sm text-gray-600">Vehicle Owner</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center">
+                      <div className="bg-green-100 p-2 rounded-lg mr-4">
+                        <MapPin className="w-5 h-5 text-green-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900">Location</div>
+                        <div className="text-gray-600">{selectedVehicle.supplier.location}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center">
+                      <div className="bg-purple-100 p-2 rounded-lg mr-4">
+                        <Phone className="w-5 h-5 text-purple-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900">Contact Number</div>
+                        <div className="text-gray-600">{selectedVehicle.supplier.phone}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center">
+                      <div className="bg-orange-100 p-2 rounded-lg mr-4">
+                        <Award className="w-5 h-5 text-orange-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900">Total Jobs</div>
+                        <div className="text-gray-600">{selectedVehicle.supplier.totalJobs} completed</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Buttons */}
+                <div className="bg-white rounded-2xl p-8 shadow-lg">
+                  <h3 className="text-xl font-bold text-gray-900 mb-6">Contact Owner</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      onClick={() => handleCall(selectedVehicle.supplier.phone)}
+                      className="flex items-center justify-center bg-green-500 text-white py-4 px-6 rounded-xl hover:bg-green-600 transition-colors font-semibold shadow-lg"
+                    >
+                      <Phone className="w-5 h-5 mr-2" />
+                      Call Now
+                    </button>
+                    <button
+                      onClick={() => handleMessage(selectedVehicle.supplier.phone, selectedVehicle.supplier.name, selectedVehicle.name)}
+                      className="flex items-center justify-center bg-blue-500 text-white py-4 px-6 rounded-xl hover:bg-blue-600 transition-colors font-semibold shadow-lg"
+                    >
+                      <MessageCircle className="w-5 h-5 mr-2" />
+                      Message
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-500 text-center mt-4">
+                    Connect directly with the vehicle owner to discuss rental terms
+                  </p>
+                </div>
+
+                {/* Quick Rental */}
+                <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 text-white">
+                  <h3 className="text-xl font-bold mb-4">Quick Rental</h3>
+                  <p className="mb-6">Need this vehicle? Contact the owner directly for immediate booking.</p>
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={() => handleCall(selectedVehicle.supplier.phone)}
+                      className="flex-1 bg-white text-blue-600 py-3 px-4 rounded-xl hover:bg-gray-100 transition-colors font-semibold"
+                    >
+                      Call to Book
+                    </button>
+                    <button
+                      onClick={() => handleMessage(selectedVehicle.supplier.phone, selectedVehicle.supplier.name, selectedVehicle.name)}
+                      className="flex-1 bg-yellow-400 text-black py-3 px-4 rounded-xl hover:bg-yellow-500 transition-colors font-semibold"
+                    >
+                      Message to Book
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -44,30 +220,30 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
               Professional Vehicle Rental
             </h1>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
-              Well-maintained construction vehicles and heavy machinery with experienced operators. 
-              Flexible rental terms and comprehensive insurance coverage included.
+              Connect directly with vehicle owners across Sri Lanka. Browse available vehicles, 
+              view owner details, and contact them instantly for your construction needs.
             </p>
             
             <div className="grid md:grid-cols-4 gap-6 mt-12">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
                 <Shield className="w-8 h-8 text-white mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-2">Fully Insured</h3>
-                <p className="text-blue-100 text-sm">Comprehensive coverage</p>
+                <h3 className="font-bold text-lg mb-2">Verified Owners</h3>
+                <p className="text-blue-100 text-sm">All owners are verified and rated</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <Wrench className="w-8 h-8 text-white mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-2">Well Maintained</h3>
-                <p className="text-blue-100 text-sm">Regular service checks</p>
+                <Phone className="w-8 h-8 text-white mx-auto mb-3" />
+                <h3 className="font-bold text-lg mb-2">Direct Contact</h3>
+                <p className="text-blue-100 text-sm">Call or message owners directly</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
                 <Users className="w-8 h-8 text-white mx-auto mb-3" />
                 <h3 className="font-bold text-lg mb-2">Expert Operators</h3>
-                <p className="text-blue-100 text-sm">Skilled professionals</p>
+                <p className="text-blue-100 text-sm">Skilled professionals included</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
                 <Clock className="w-8 h-8 text-white mx-auto mb-3" />
                 <h3 className="font-bold text-lg mb-2">Flexible Terms</h3>
-                <p className="text-blue-100 text-sm">Hourly or daily rates</p>
+                <p className="text-blue-100 text-sm">Hourly or daily rates available</p>
               </div>
             </div>
           </div>
@@ -78,15 +254,16 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Your Vehicle</h2>
-            <p className="text-gray-600 text-lg">Professional construction vehicles for every project need</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Available Vehicles</h2>
+            <p className="text-gray-600 text-lg">Browse vehicles from verified owners across Sri Lanka</p>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
             {vehicles.map((vehicle) => (
               <div
                 key={vehicle.id}
-                className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-blue-200"
+                onClick={() => setSelectedVehicle(vehicle)}
+                className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-blue-200 cursor-pointer"
               >
                 <div className="relative overflow-hidden">
                   <img
@@ -97,7 +274,7 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                   <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
                     <div className="flex items-center">
                       <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium ml-1">4.9</span>
+                      <span className="text-sm font-medium ml-1">{vehicle.supplier.rating}</span>
                     </div>
                   </div>
                   <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-medium ${
@@ -113,18 +290,30 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-2">{vehicle.name}</h3>
-                      <p className="text-gray-600 leading-relaxed">{vehicle.description}</p>
+                      <p className="text-gray-600 leading-relaxed line-clamp-2">{vehicle.description}</p>
+                    </div>
+                  </div>
+
+                  {/* Owner Info */}
+                  <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-semibold text-gray-900">{vehicle.supplier.name}</span>
+                      <span className="text-sm text-gray-500">{vehicle.supplier.totalJobs} jobs</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {vehicle.supplier.location}
                     </div>
                   </div>
                   
                   <div className="mb-6">
                     <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
                       <Wrench className="w-4 h-4 mr-2" />
-                      Specifications:
+                      Key Specifications:
                     </h4>
                     <div className="grid grid-cols-1 gap-2">
-                      {vehicle.specifications.map((spec, index) => (
-                        <div key={index} className="flex items-center text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
+                      {vehicle.specifications.slice(0, 2).map((spec, index) => (
+                        <div key={index} className="flex items-center text-sm text-gray-600 bg-white rounded-lg p-2">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
                           {spec}
                         </div>
@@ -132,16 +321,16 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 mb-6">
+                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 mb-6">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-blue-600">
+                        <div className="text-xl font-bold text-blue-600">
                           Rs. {vehicle.pricePerHour.toLocaleString()}
                         </div>
                         <div className="text-sm text-gray-600">per hour</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-blue-600">
+                        <div className="text-xl font-bold text-blue-600">
                           Rs. {vehicle.pricePerDay.toLocaleString()}
                         </div>
                         <div className="text-sm text-gray-600">per day</div>
@@ -149,130 +338,34 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                     </div>
                   </div>
                   
-                  <button
-                    onClick={() => setSelectedVehicle(vehicle)}
-                    disabled={!vehicle.available}
-                    className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-4 px-6 rounded-xl hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center font-semibold shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed group"
-                  >
-                    <Calendar size={20} className="mr-2 group-hover:scale-110 transition-transform" />
-                    {vehicle.available ? 'Book Vehicle' : 'Currently Unavailable'}
-                  </button>
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCall(vehicle.supplier.phone);
+                      }}
+                      className="flex-1 bg-green-500 text-white py-3 px-4 rounded-xl hover:bg-green-600 transition-colors font-semibold flex items-center justify-center"
+                    >
+                      <Phone className="w-4 h-4 mr-2" />
+                      Call
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleMessage(vehicle.supplier.phone, vehicle.supplier.name, vehicle.name);
+                      }}
+                      className="flex-1 bg-blue-500 text-white py-3 px-4 rounded-xl hover:bg-blue-600 transition-colors font-semibold flex items-center justify-center"
+                    >
+                      <MessageCircle className="w-4 h-4 mr-2" />
+                      Message
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
-
-      {/* Booking Modal */}
-      {selectedVehicle && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-8 shadow-2xl">
-            <div className="text-center mb-6">
-              <img 
-                src={selectedVehicle.image} 
-                alt={selectedVehicle.name}
-                className="w-20 h-20 rounded-xl object-cover mx-auto mb-4"
-              />
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedVehicle.name}</h3>
-              <p className="text-gray-600">{selectedVehicle.description}</p>
-            </div>
-            
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Rental Duration Type
-                </label>
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    onClick={() => setDurationType('hours')}
-                    className={`flex items-center justify-center py-3 px-4 rounded-xl transition-all duration-300 ${
-                      durationType === 'hours'
-                        ? 'bg-blue-600 text-white shadow-lg'
-                        : 'border-2 border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <Clock size={16} className="mr-2" />
-                    Hourly
-                  </button>
-                  <button
-                    onClick={() => setDurationType('days')}
-                    className={`flex items-center justify-center py-3 px-4 rounded-xl transition-all duration-300 ${
-                      durationType === 'days'
-                        ? 'bg-blue-600 text-white shadow-lg'
-                        : 'border-2 border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <Calendar size={16} className="mr-2" />
-                    Daily
-                  </button>
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Duration ({durationType})
-                </label>
-                <div className="flex items-center space-x-4">
-                  <button
-                    onClick={() => setDuration(Math.max(1, duration - 1))}
-                    className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors"
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    min="1"
-                    value={duration}
-                    onChange={(e) => setDuration(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="flex-1 text-center border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 font-semibold text-lg"
-                  />
-                  <button
-                    onClick={() => setDuration(duration + 1)}
-                    className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
-                <div className="flex justify-between items-center mb-3">
-                  <span className="font-medium text-gray-700">Rate per {durationType.slice(0, -1)}:</span>
-                  <span className="font-semibold text-gray-900">Rs. {getPrice(selectedVehicle).toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between items-center mb-3">
-                  <span className="font-medium text-gray-700">Duration:</span>
-                  <span className="font-semibold text-gray-900">{duration} {durationType}</span>
-                </div>
-                <div className="border-t border-blue-200 pt-3">
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-lg text-gray-900">Total Estimated Cost:</span>
-                    <span className="text-3xl font-bold text-blue-600">
-                      Rs. {(getPrice(selectedVehicle) * duration).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => setSelectedVehicle(null)}
-                  className="flex-1 border-2 border-gray-300 text-gray-700 py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors font-semibold"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleRequest}
-                  className="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-3 px-4 rounded-xl hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 font-semibold shadow-lg"
-                >
-                  Book Vehicle
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -17,6 +17,13 @@ export interface MaterialItem {
   unit: string;
   image: string;
   available: boolean;
+  supplier: {
+    name: string;
+    location: string;
+    phone: string;
+    rating: number;
+    totalOrders: number;
+  };
 }
 
 export interface Vehicle {
@@ -28,6 +35,13 @@ export interface Vehicle {
   image: string;
   available: boolean;
   specifications: string[];
+  supplier: {
+    name: string;
+    location: string;
+    phone: string;
+    rating: number;
+    totalJobs: number;
+  };
 }
 
 export interface ServiceRequest {
