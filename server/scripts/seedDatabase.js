@@ -161,7 +161,7 @@ const seedData = async () => {
         },
         images: [
           {
-            url: 'https://images.pexels.com/photos/1029641/pexels-photo-1029641.jpeg',
+            url: 'https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800',
             alt: 'JCB Excavator'
           }
         ],
@@ -207,7 +207,7 @@ const seedData = async () => {
         },
         images: [
           {
-            url: 'https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg',
+            url: 'https://images.pexels.com/photos/906494/pexels-photo-906494.jpeg?auto=compress&cs=tinysrgb&w=800',
             alt: 'Transport Truck'
           }
         ],
@@ -246,7 +246,7 @@ const seedData = async () => {
         availableQuantity: 1000,
         images: [
           {
-            url: 'https://images.pexels.com/photos/1029604/pexels-photo-1029604.jpeg',
+            url: 'https://images.pexels.com/photos/1029604/pexels-photo-1029604.jpeg?auto=compress&cs=tinysrgb&w=800',
             alt: 'River Sand'
           }
         ],
@@ -276,7 +276,7 @@ const seedData = async () => {
         availableQuantity: 50,
         images: [
           {
-            url: 'https://images.pexels.com/photos/459728/pexels-photo-459728.jpeg',
+            url: 'https://images.pexels.com/photos/162553/keys-workshop-mechanic-tools-162553.jpeg?auto=compress&cs=tinysrgb&w=800',
             alt: 'Steel Rods'
           }
         ],
@@ -305,7 +305,7 @@ const seedData = async () => {
         availableQuantity: 500,
         images: [
           {
-            url: 'https://images.pexels.com/photos/416978/pexels-photo-416978.jpeg',
+            url: 'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=800',
             alt: 'Garden Soil'
           }
         ],
@@ -334,7 +334,7 @@ const seedData = async () => {
         availableQuantity: 10000,
         images: [
           {
-            url: 'https://images.pexels.com/photos/1004584/pexels-photo-1004584.jpeg',
+            url: 'https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800',
             alt: 'Clay Bricks'
           }
         ],

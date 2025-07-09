@@ -68,7 +68,7 @@ export const Hero: React.FC<HeroProps> = ({ onServiceSelect }) => {
             <div className="relative">
               <div className="relative z-10">
                 <img 
-                  src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg" 
+                  src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=1200" 
                   alt="Modern Construction Site with Heavy Machinery" 
                   className="rounded-3xl shadow-2xl w-full h-[500px] object-cover"
                 />

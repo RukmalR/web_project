@@ -65,7 +65,7 @@ export const AboutPage: React.FC = () => {
             </div>
             <div className="relative">
               <img 
-                src="https://images.pexels.com/photos/1029641/pexels-photo-1029641.jpeg" 
+                src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800" 
                 alt="Construction site with Auto X equipment" 
                 className="rounded-2xl shadow-2xl w-full h-[400px] object-cover"
               />

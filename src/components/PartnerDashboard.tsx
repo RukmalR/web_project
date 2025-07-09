@@ -193,7 +193,7 @@ export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, veh
                 vehicles.map((vehicle) => (
                   <div key={vehicle.id} className="bg-white rounded-2xl shadow-lg overflow-hidden">
                     <img 
-                      src={vehicle.images[0] || 'https://images.pexels.com/photos/1029641/pexels-photo-1029641.jpeg'} 
+                      src={vehicle.images[0] || 'https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800'} 
                       alt={vehicle.name}
                       className="w-full h-48 object-cover"
                     />
@@ -234,7 +234,7 @@ export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, veh
                 materials.map((material) => (
                   <div key={material.id} className="bg-white rounded-2xl shadow-lg overflow-hidden">
                     <img 
-                      src={material.images[0] || 'https://images.pexels.com/photos/1029604/pexels-photo-1029604.jpeg'} 
+                      src={material.images[0] || 'https://images.pexels.com/photos/1029604/pexels-photo-1029604.jpeg?auto=compress&cs=tinysrgb&w=800'} 
                       alt={material.name}
                       className="w-full h-48 object-cover"
                     />
