@@ -83,8 +83,8 @@ function App() {
   };
 
   const handleServiceRequestSubmit = (request: Omit<ServiceRequest, 'id' | 'userId' | 'status' | 'requestDate'>) => {
-    // Simulate service request submission
-    console.log('Service request submitted:', request);
+    // This would create a notification for the supplier/owner
+    console.log('Contact request sent to supplier/owner:', request);
     
     setServiceRequestModal({
       isOpen: false,
@@ -92,7 +92,7 @@ function App() {
     });
     
     setShowSuccessMessage(true);
-    setTimeout(() => setShowSuccessMessage(false), 5000);
+    setTimeout(() => setShowSuccessMessage(false), 3000);
   };
 
   const handlePartnerRegistration = (partnerData: Omit<Partner, 'id' | 'status' | 'registrationDate' | 'rating' | 'totalJobs'>) => {

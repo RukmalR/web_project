@@ -137,7 +137,7 @@ export const materialItems: MaterialItem[] = [
       name: 'Wilson Material Supply',
       location: 'Kelaniya',
       district: 'Gampaha',
-      phone: '+94 76 1098385',
+      phone: '+94761098385',
       rating: 4.9,
       totalOrders: 245
     }
@@ -155,7 +155,7 @@ export const materialItems: MaterialItem[] = [
       name: 'Colombo Sand Suppliers',
       location: 'Colombo',
       district: 'Colombo',
-      phone: '+94 77 2345678',
+      phone: '+94772345678',
       rating: 4.7,
       totalOrders: 189
     }
@@ -173,7 +173,7 @@ export const materialItems: MaterialItem[] = [
       name: 'Kandy Construction Materials',
       location: 'Kandy',
       district: 'Kandy',
-      phone: '+94 75 9876543',
+      phone: '+94759876543',
       rating: 4.8,
       totalOrders: 156
     }
