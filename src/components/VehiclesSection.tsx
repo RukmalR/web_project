@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { vehicles } from '../data/services';
+import { vehicles, vehicleCategories, sriLankanDistricts } from '../data/services';
 import { Vehicle } from '../types';
-import { Calendar, ArrowLeft, Clock, Star, Shield, Wrench, Users, MapPin, Phone, MessageCircle, User, Award } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Phone, MessageCircle, User, Award, Filter, Truck, Wrench } from 'lucide-react';
 
 interface VehiclesSectionProps {
   onBack: () => void;
@@ -9,18 +9,11 @@ interface VehiclesSectionProps {
 }
 
 export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequestService }) => {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [duration, setDuration] = useState(1);
   const [durationType, setDurationType] = useState<'hours' | 'days'>('hours');
-
-  const handleRequest = () => {
-    if (selectedVehicle) {
-      onRequestService(selectedVehicle, duration, durationType);
-      setSelectedVehicle(null);
-      setDuration(1);
-      setDurationType('hours');
-    }
-  };
 
   const handleCall = (phone: string) => {
     window.open(`tel:${phone}`, '_self');
@@ -32,14 +25,17 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
     window.open(whatsappUrl, '_blank');
   };
 
-  const getPrice = (vehicle: Vehicle) => {
-    return durationType === 'hours' ? vehicle.pricePerHour : vehicle.pricePerDay;
-  };
+  // Filter vehicles by category and district
+  const filteredVehicles = vehicles.filter(vehicle => {
+    const categoryMatch = selectedCategory ? vehicle.category === selectedCategory : true;
+    const districtMatch = selectedDistrict ? vehicle.supplier.district === selectedDistrict : true;
+    return categoryMatch && districtMatch;
+  });
 
+  // Vehicle detail view
   if (selectedVehicle) {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* Header */}
         <section className="bg-gradient-to-r from-blue-600 to-blue-700 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <button
@@ -53,11 +49,9 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
           </div>
         </section>
 
-        {/* Vehicle Details */}
         <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12">
-              {/* Vehicle Image and Info */}
               <div>
                 <img 
                   src={selectedVehicle.image} 
@@ -96,9 +90,7 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                 </div>
               </div>
 
-              {/* Supplier Info and Contact */}
               <div className="space-y-6">
-                {/* Supplier Card */}
                 <div className="bg-white rounded-2xl p-8 shadow-lg">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-bold text-gray-900">Vehicle Owner</h2>
@@ -125,7 +117,7 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                       </div>
                       <div>
                         <div className="font-semibold text-gray-900">Location</div>
-                        <div className="text-gray-600">{selectedVehicle.supplier.location}</div>
+                        <div className="text-gray-600">{selectedVehicle.supplier.location}, {selectedVehicle.supplier.district}</div>
                       </div>
                     </div>
 
@@ -151,7 +143,6 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                   </div>
                 </div>
 
-                {/* Contact Buttons */}
                 <div className="bg-white rounded-2xl p-8 shadow-lg">
                   <h3 className="text-xl font-bold text-gray-900 mb-6">Contact Owner</h3>
                   <div className="grid grid-cols-2 gap-4">
@@ -175,7 +166,6 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                   </p>
                 </div>
 
-                {/* Quick Rental */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 text-white">
                   <h3 className="text-xl font-bold mb-4">Quick Rental</h3>
                   <p className="mb-6">Need this vehicle? Contact the owner directly for immediate booking.</p>
@@ -202,9 +192,165 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
     );
   }
 
+  // Category listings view
+  if (selectedCategory) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <section className="bg-gradient-to-r from-blue-600 to-blue-700 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className="flex items-center text-white hover:text-blue-200 transition-colors mb-8 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg"
+            >
+              <ArrowLeft size={20} className="mr-2" />
+              Back to Categories
+            </button>
+
+            <div className="text-center text-white">
+              <h1 className="text-5xl lg:text-6xl font-bold mb-6 capitalize">
+                {selectedCategory.replace('_', ' ')} Rental
+              </h1>
+              <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
+                Browse {selectedCategory.replace('_', ' ')} owners across Sri Lanka. Connect directly with verified vehicle owners.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Location Filter */}
+            <div className="mb-8 bg-white rounded-2xl p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-gray-900 flex items-center">
+                  <Filter className="w-5 h-5 mr-2" />
+                  Filter by Location
+                </h3>
+                <select
+                  value={selectedDistrict}
+                  onChange={(e) => setSelectedDistrict(e.target.value)}
+                  className="border-2 border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors"
+                >
+                  <option value="">All Districts</option>
+                  {sriLankanDistricts.map((district) => (
+                    <option key={district} value={district}>{district}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Results Count */}
+            <div className="mb-6">
+              <p className="text-gray-600">
+                Showing {filteredVehicles.length} {selectedCategory.replace('_', ' ')} vehicles
+                {selectedDistrict && ` in ${selectedDistrict} district`}
+              </p>
+            </div>
+
+            {/* Vehicles Grid */}
+            <div className="grid lg:grid-cols-2 gap-8">
+              {filteredVehicles.map((vehicle) => (
+                <div
+                  key={vehicle.id}
+                  onClick={() => setSelectedVehicle(vehicle)}
+                  className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-blue-200 cursor-pointer"
+                >
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={vehicle.image}
+                      alt={vehicle.name}
+                      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                      <div className="flex items-center">
+                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                        <span className="text-sm font-medium ml-1">{vehicle.supplier.rating}</span>
+                      </div>
+                    </div>
+                    <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-medium ${
+                      vehicle.available 
+                        ? 'bg-green-500 text-white' 
+                        : 'bg-red-500 text-white'
+                    }`}>
+                      {vehicle.available ? 'Available' : 'Booked'}
+                    </div>
+                  </div>
+                  
+                  <div className="p-8">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">{vehicle.name}</h3>
+                        <p className="text-gray-600 leading-relaxed line-clamp-2">{vehicle.description}</p>
+                      </div>
+                    </div>
+
+                    <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold text-gray-900">{vehicle.supplier.name}</span>
+                        <span className="text-sm text-gray-500">{vehicle.supplier.totalJobs} jobs</span>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        {vehicle.supplier.location}, {vehicle.supplier.district}
+                      </div>
+                    </div>
+                    
+                    <div className="mb-6">
+                      <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
+                        <Wrench className="w-4 h-4 mr-2" />
+                        Key Specifications:
+                      </h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {vehicle.specifications.slice(0, 2).map((spec, index) => (
+                          <div key={index} className="flex items-center text-sm text-gray-600 bg-white rounded-lg p-2">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                            {spec}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center">
+                          <div className="text-xl font-bold text-blue-600">
+                            Rs. {vehicle.pricePerHour.toLocaleString()}
+                          </div>
+                          <div className="text-sm text-gray-600">per hour</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-xl font-bold text-blue-600">
+                            Rs. {vehicle.pricePerDay.toLocaleString()}
+                          </div>
+                          <div className="text-sm text-gray-600">per day</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {filteredVehicles.length === 0 && (
+              <div className="text-center py-12">
+                <Truck className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">No vehicles found</h3>
+                <p className="text-gray-600">
+                  No {selectedCategory.replace('_', ' ')} vehicles found
+                  {selectedDistrict && ` in ${selectedDistrict} district`}. 
+                  Try selecting a different location.
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // Categories view
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-700 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <button
@@ -217,148 +363,46 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
 
           <div className="text-center text-white">
             <h1 className="text-5xl lg:text-6xl font-bold mb-6">
-              Professional Vehicle Rental
+              Vehicle Rental
             </h1>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
-              Connect directly with vehicle owners across Sri Lanka. Browse available vehicles, 
-              view owner details, and contact them instantly for your construction needs.
+              Choose the type of vehicle you need. Browse vehicle owners across Sri Lanka.
             </p>
-            
-            <div className="grid md:grid-cols-4 gap-6 mt-12">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <Shield className="w-8 h-8 text-white mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-2">Verified Owners</h3>
-                <p className="text-blue-100 text-sm">All owners are verified and rated</p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <Phone className="w-8 h-8 text-white mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-2">Direct Contact</h3>
-                <p className="text-blue-100 text-sm">Call or message owners directly</p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <Users className="w-8 h-8 text-white mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-2">Expert Operators</h3>
-                <p className="text-blue-100 text-sm">Skilled professionals included</p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <Clock className="w-8 h-8 text-white mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-2">Flexible Terms</h3>
-                <p className="text-blue-100 text-sm">Hourly or daily rates available</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Vehicles Grid */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Available Vehicles</h2>
-            <p className="text-gray-600 text-lg">Browse vehicles from verified owners across Sri Lanka</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Vehicle Categories</h2>
+            <p className="text-gray-600 text-lg">Select a category to browse available vehicles</p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            {vehicles.map((vehicle) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {vehicleCategories.map((category) => (
               <div
-                key={vehicle.id}
-                onClick={() => setSelectedVehicle(vehicle)}
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
                 className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-blue-200 cursor-pointer"
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={vehicle.image}
-                    alt={vehicle.name}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium ml-1">{vehicle.supplier.rating}</span>
-                    </div>
-                  </div>
-                  <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-medium ${
-                    vehicle.available 
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-red-500 text-white'
-                  }`}>
-                    {vehicle.available ? 'Available' : 'Booked'}
-                  </div>
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors"></div>
+                  <div className="absolute top-3 left-3 text-2xl">{category.icon}</div>
                 </div>
                 
-                <div className="p-8">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">{vehicle.name}</h3>
-                      <p className="text-gray-600 leading-relaxed line-clamp-2">{vehicle.description}</p>
-                    </div>
-                  </div>
-
-                  {/* Owner Info */}
-                  <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold text-gray-900">{vehicle.supplier.name}</span>
-                      <span className="text-sm text-gray-500">{vehicle.supplier.totalJobs} jobs</span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {vehicle.supplier.location}
-                    </div>
-                  </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{category.name}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed mb-4">{category.description}</p>
                   
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
-                      <Wrench className="w-4 h-4 mr-2" />
-                      Key Specifications:
-                    </h4>
-                    <div className="grid grid-cols-1 gap-2">
-                      {vehicle.specifications.slice(0, 2).map((spec, index) => (
-                        <div key={index} className="flex items-center text-sm text-gray-600 bg-white rounded-lg p-2">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                          {spec}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 mb-6">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center">
-                        <div className="text-xl font-bold text-blue-600">
-                          Rs. {vehicle.pricePerHour.toLocaleString()}
-                        </div>
-                        <div className="text-sm text-gray-600">per hour</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-xl font-bold text-blue-600">
-                          Rs. {vehicle.pricePerDay.toLocaleString()}
-                        </div>
-                        <div className="text-sm text-gray-600">per day</div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCall(vehicle.supplier.phone);
-                      }}
-                      className="flex-1 bg-green-500 text-white py-3 px-4 rounded-xl hover:bg-green-600 transition-colors font-semibold flex items-center justify-center"
-                    >
-                      <Phone className="w-4 h-4 mr-2" />
-                      Call
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleMessage(vehicle.supplier.phone, vehicle.supplier.name, vehicle.name);
-                      }}
-                      className="flex-1 bg-blue-500 text-white py-3 px-4 rounded-xl hover:bg-blue-600 transition-colors font-semibold flex items-center justify-center"
-                    >
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      Message
-                    </button>
+                  <div className="flex items-center text-blue-600 font-semibold group-hover:text-blue-700 text-sm">
+                    Browse {category.name}
+                    <ArrowLeft className="ml-2 w-4 h-4 rotate-180 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
               </div>

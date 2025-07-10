@@ -13,6 +13,7 @@ export interface MaterialItem {
   id: string;
   name: string;
   description: string;
+  category: string;
   pricePerUnit: number;
   unit: string;
   image: string;
@@ -20,6 +21,7 @@ export interface MaterialItem {
   supplier: {
     name: string;
     location: string;
+    district: string;
     phone: string;
     rating: number;
     totalOrders: number;
@@ -30,6 +32,7 @@ export interface Vehicle {
   id: string;
   name: string;
   description: string;
+  category: string;
   pricePerHour: number;
   pricePerDay: number;
   image: string;
@@ -38,6 +41,7 @@ export interface Vehicle {
   supplier: {
     name: string;
     location: string;
+    district: string;
     phone: string;
     rating: number;
     totalJobs: number;

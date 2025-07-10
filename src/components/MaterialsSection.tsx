@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { materialItems } from '../data/services';
+import { materialItems, materialCategories, sriLankanDistricts } from '../data/services';
 import { MaterialItem } from '../types';
-import { ShoppingCart, ArrowLeft, Star, Truck, Shield, Clock, MapPin, Phone, MessageCircle, User, Award } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Phone, MessageCircle, User, Award, Filter, Package } from 'lucide-react';
 
 interface MaterialsSectionProps {
   onBack: () => void;
@@ -9,16 +9,10 @@ interface MaterialsSectionProps {
 }
 
 export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRequestService }) => {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<MaterialItem | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
-
-  const handleRequest = () => {
-    if (selectedItem) {
-      onRequestService(selectedItem, quantity);
-      setSelectedItem(null);
-      setQuantity(1);
-    }
-  };
 
   const handleCall = (phone: string) => {
     window.open(`tel:${phone}`, '_self');
@@ -30,10 +24,17 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
     window.open(whatsappUrl, '_blank');
   };
 
+  // Filter materials by category and district
+  const filteredMaterials = materialItems.filter(item => {
+    const categoryMatch = selectedCategory ? item.category === selectedCategory : true;
+    const districtMatch = selectedDistrict ? item.supplier.district === selectedDistrict : true;
+    return categoryMatch && districtMatch;
+  });
+
+  // Material detail view
   if (selectedItem) {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* Header */}
         <section className="bg-gradient-to-r from-yellow-400 to-yellow-500 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <button
@@ -47,11 +48,9 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
           </div>
         </section>
 
-        {/* Material Details */}
         <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12">
-              {/* Material Image and Info */}
               <div>
                 <img 
                   src={selectedItem.image} 
@@ -77,9 +76,7 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
                 </div>
               </div>
 
-              {/* Supplier Info and Contact */}
               <div className="space-y-6">
-                {/* Supplier Card */}
                 <div className="bg-white rounded-2xl p-8 shadow-lg">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-bold text-gray-900">Supplier Information</h2>
@@ -106,7 +103,7 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
                       </div>
                       <div>
                         <div className="font-semibold text-gray-900">Location</div>
-                        <div className="text-gray-600">{selectedItem.supplier.location}</div>
+                        <div className="text-gray-600">{selectedItem.supplier.location}, {selectedItem.supplier.district}</div>
                       </div>
                     </div>
 
@@ -132,7 +129,6 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
                   </div>
                 </div>
 
-                {/* Contact Buttons */}
                 <div className="bg-white rounded-2xl p-8 shadow-lg">
                   <h3 className="text-xl font-bold text-gray-900 mb-6">Contact Supplier</h3>
                   <div className="grid grid-cols-2 gap-4">
@@ -156,7 +152,6 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
                   </p>
                 </div>
 
-                {/* Quick Order */}
                 <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-2xl p-8 text-black">
                   <h3 className="text-xl font-bold mb-4">Quick Order</h3>
                   <p className="mb-6">Need this material? Contact the supplier directly for immediate assistance.</p>
@@ -183,9 +178,136 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
     );
   }
 
+  // Category listings view
+  if (selectedCategory) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <section className="bg-gradient-to-r from-yellow-400 to-yellow-500 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className="flex items-center text-black hover:text-gray-700 transition-colors mb-8 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg"
+            >
+              <ArrowLeft size={20} className="mr-2" />
+              Back to Categories
+            </button>
+
+            <div className="text-center text-white">
+              <h1 className="text-5xl lg:text-6xl font-bold mb-6 capitalize">
+                {selectedCategory} Suppliers
+              </h1>
+              <p className="text-xl text-black max-w-3xl mx-auto mb-8">
+                Browse {selectedCategory} suppliers across Sri Lanka. Connect directly with verified suppliers.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Location Filter */}
+            <div className="mb-8 bg-white rounded-2xl p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-gray-900 flex items-center">
+                  <Filter className="w-5 h-5 mr-2" />
+                  Filter by Location
+                </h3>
+                <select
+                  value={selectedDistrict}
+                  onChange={(e) => setSelectedDistrict(e.target.value)}
+                  className="border-2 border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-yellow-500 transition-colors"
+                >
+                  <option value="">All Districts</option>
+                  {sriLankanDistricts.map((district) => (
+                    <option key={district} value={district}>{district}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Results Count */}
+            <div className="mb-6">
+              <p className="text-gray-600">
+                Showing {filteredMaterials.length} {selectedCategory} suppliers
+                {selectedDistrict && ` in ${selectedDistrict} district`}
+              </p>
+            </div>
+
+            {/* Materials Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredMaterials.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => setSelectedItem(item)}
+                  className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-yellow-200 cursor-pointer"
+                >
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full">
+                      <div className="flex items-center">
+                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                        <span className="text-sm font-medium ml-1">{item.supplier.rating}</span>
+                      </div>
+                    </div>
+                    {item.available && (
+                      <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        Available
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{item.name}</h3>
+                    <p className="text-gray-600 mb-4 text-sm leading-relaxed line-clamp-2">{item.description}</p>
+                    
+                    <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold text-gray-900 text-sm">{item.supplier.name}</span>
+                        <span className="text-xs text-gray-500">{item.supplier.totalOrders} orders</span>
+                      </div>
+                      <div className="flex items-center text-xs text-gray-600">
+                        <MapPin className="w-3 h-3 mr-1" />
+                        {item.supplier.location}, {item.supplier.district}
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <span className="text-2xl font-bold text-yellow-600">
+                          Rs. {item.pricePerUnit.toLocaleString()}
+                        </span>
+                        <span className="text-gray-500 text-sm ml-1">per {item.unit}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {filteredMaterials.length === 0 && (
+              <div className="text-center py-12">
+                <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">No suppliers found</h3>
+                <p className="text-gray-600">
+                  No {selectedCategory} suppliers found
+                  {selectedDistrict && ` in ${selectedDistrict} district`}. 
+                  Try selecting a different location.
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // Categories view
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
       <section className="bg-gradient-to-r from-yellow-400 to-yellow-500 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <button
@@ -198,114 +320,46 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
 
           <div className="text-center text-white">
             <h1 className="text-5xl lg:text-6xl font-bold mb-6">
-              Premium Construction Materials
+              Construction Materials
             </h1>
             <p className="text-xl text-black max-w-3xl mx-auto mb-8">
-              Connect directly with trusted material suppliers. Browse quality materials, 
-              view supplier details, and contact them instantly for your construction needs.
+              Choose the type of construction material you need. Browse suppliers across Sri Lanka.
             </p>
-            
-            <div className="grid md:grid-cols-3 gap-6 mt-12">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <Shield className="w-8 h-8 text-black mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-2">Verified Suppliers</h3>
-                <p className="text-black text-sm">All suppliers are verified and rated</p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <Phone className="w-8 h-8 text-black mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-2">Direct Contact</h3>
-                <p className="text-black text-sm">Call or message suppliers directly</p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <Clock className="w-8 h-8 text-black mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-2">Quick Response</h3>
-                <p className="text-black text-sm">Get instant quotes and availability</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Materials Grid */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Available Materials</h2>
-            <p className="text-gray-600 text-lg">Browse materials from verified suppliers across Sri Lanka</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Material Categories</h2>
+            <p className="text-gray-600 text-lg">Select a category to browse suppliers</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {materialItems.map((item) => (
+            {materialCategories.map((category) => (
               <div
-                key={item.id}
-                onClick={() => setSelectedItem(item)}
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
                 className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-yellow-200 cursor-pointer"
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={item.image}
-                    alt={item.name}
+                    src={category.image}
+                    alt={category.name}
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full">
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium ml-1">{item.supplier.rating}</span>
-                    </div>
-                  </div>
-                  {item.available && (
-                    <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      Available
-                    </div>
-                  )}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors"></div>
+                  <div className="absolute top-4 left-4 text-4xl">{category.icon}</div>
                 </div>
                 
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{item.name}</h3>
-                  <p className="text-gray-600 mb-4 text-sm leading-relaxed line-clamp-2">{item.description}</p>
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{category.name}</h3>
+                  <p className="text-gray-600 leading-relaxed mb-6">{category.description}</p>
                   
-                  {/* Supplier Info */}
-                  <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold text-gray-900 text-sm">{item.supplier.name}</span>
-                      <span className="text-xs text-gray-500">{item.supplier.totalOrders} orders</span>
-                    </div>
-                    <div className="flex items-center text-xs text-gray-600">
-                      <MapPin className="w-3 h-3 mr-1" />
-                      {item.supplier.location}
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center mb-6">
-                    <div>
-                      <span className="text-2xl font-bold text-yellow-600">
-                        Rs. {item.pricePerUnit.toLocaleString()}
-                      </span>
-                      <span className="text-gray-500 text-sm ml-1">per {item.unit}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCall(item.supplier.phone);
-                      }}
-                      className="flex-1 bg-green-500 text-white py-2 px-3 rounded-lg hover:bg-green-600 transition-colors text-sm font-medium flex items-center justify-center"
-                    >
-                      <Phone className="w-4 h-4 mr-1" />
-                      Call
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleMessage(item.supplier.phone, item.supplier.name, item.name);
-                      }}
-                      className="flex-1 bg-blue-500 text-white py-2 px-3 rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium flex items-center justify-center"
-                    >
-                      <MessageCircle className="w-4 h-4 mr-1" />
-                      Message
-                    </button>
+                  <div className="flex items-center text-yellow-600 font-semibold group-hover:text-yellow-700">
+                    Browse {category.name} Suppliers
+                    <ArrowLeft className="ml-2 w-5 h-5 rotate-180 group-hover:translate-x-2 transition-transform" />
                   </div>
                 </div>
               </div>
