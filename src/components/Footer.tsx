@@ -62,9 +62,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </div>
               </div>
               <p className="text-gray-300 mb-6 leading-relaxed max-w-md">
-                Your trusted partner for premium construction materials and professional 
-                vehicle rental services. We deliver quality, reliability, and excellence 
-                to construction projects across Sri Lanka.
+                Your trusted platform connecting construction professionals with verified 
+                material suppliers and vehicle owners across Sri Lanka. Direct connections, 
+                no middleman, negotiate your own terms.
               </p>
               <div className="flex space-x-4">
                 <div className="w-12 h-12 bg-yellow-400 rounded-xl flex items-center justify-center hover:bg-yellow-500 cursor-pointer transition-colors group">

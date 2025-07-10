@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { X, User, Building, Phone, Mail, MapPin, FileText, Shield, CreditCard, Upload, CheckCircle, AlertCircle } from 'lucide-react';
+import { X, User, Building, Phone, Mail, MapPin, FileText, Shield, Upload, CheckCircle, AlertCircle, Camera } from 'lucide-react';
 import { Partner } from '../types';
+import { sriLankanDistricts } from '../data/services';
 
 interface PartnerRegistrationProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (partner: Omit<Partner, 'id' | 'status' | 'registrationDate' | 'rating' | 'totalJobs'>) => void;
+  onSubmit: (partner: Omit<Partner, 'id' | 'status' | 'registrationDate' | 'rating' | 'totalJobs' | 'notifications'>) => void;
 }
 
 export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen, onClose, onSubmit }) => {
@@ -17,11 +18,9 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
     email: '',
     phone: '',
     address: '',
-    city: '',
-    state: '',
-    zipCode: '',
+    district: '',
     businessLicense: '',
-    taxId: '',
+    brNumber: '',
     yearsInBusiness: 0,
     description: '',
     services: [] as string[],
@@ -31,17 +30,11 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
       policyNumber: '',
       expiryDate: ''
     },
-    bankDetails: {
-      accountHolderName: '',
-      bankName: '',
-      accountNumber: '',
-      routingNumber: ''
-    },
     documents: {
       businessLicense: null as File | null,
       insurance: null as File | null,
-      taxCertificate: null as File | null,
-      bankStatement: null as File | null
+      brCertificate: null as File | null,
+      vehiclePhotos: [] as File[]
     }
   });
 
@@ -68,12 +61,34 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, documentType: string) => {
-    const file = e.target.files?.[0] || null;
+    const files = e.target.files;
+    if (documentType === 'vehiclePhotos' && files) {
+      const fileArray = Array.from(files);
+      setFormData(prev => ({
+        ...prev,
+        documents: {
+          ...prev.documents,
+          vehiclePhotos: [...prev.documents.vehiclePhotos, ...fileArray]
+        }
+      }));
+    } else {
+      const file = files?.[0] || null;
+      setFormData(prev => ({
+        ...prev,
+        documents: {
+          ...prev.documents,
+          [documentType]: file
+        }
+      }));
+    }
+  };
+
+  const removeVehiclePhoto = (index: number) => {
     setFormData(prev => ({
       ...prev,
       documents: {
         ...prev.documents,
-        [documentType]: file
+        vehiclePhotos: prev.documents.vehiclePhotos.filter((_, i) => i !== index)
       }
     }));
   };
@@ -99,7 +114,7 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const partner: Omit<Partner, 'id' | 'status' | 'registrationDate' | 'rating' | 'totalJobs'> = {
+    const partner: Omit<Partner, 'id' | 'status' | 'registrationDate' | 'rating' | 'totalJobs' | 'notifications'> = {
       type: partnerType as 'vehicle_owner' | 'material_supplier',
       ...formData
     };
@@ -116,11 +131,9 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
       email: '',
       phone: '',
       address: '',
-      city: '',
-      state: '',
-      zipCode: '',
+      district: '',
       businessLicense: '',
-      taxId: '',
+      brNumber: '',
       yearsInBusiness: 0,
       description: '',
       services: [],
@@ -130,22 +143,16 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
         policyNumber: '',
         expiryDate: ''
       },
-      bankDetails: {
-        accountHolderName: '',
-        bankName: '',
-        accountNumber: '',
-        routingNumber: ''
-      },
       documents: {
         businessLicense: null,
         insurance: null,
-        taxCertificate: null,
-        bankStatement: null
+        brCertificate: null,
+        vehiclePhotos: []
       }
     });
   };
 
-  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 5));
+  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 4));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
 
   const vehicleServices = [
@@ -159,8 +166,8 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
   ];
 
   const certificationOptions = [
-    'ISO 9001', 'OSHA Certified', 'DOT Certified', 'EPA Compliant',
-    'Quality Assurance Certified', 'Safety Management Certified'
+    'ISO 9001', 'SLSI Certified', 'Construction Industry Certified', 'Quality Assurance Certified',
+    'Safety Management Certified', 'Environmental Compliance'
   ];
 
   return (
@@ -170,7 +177,7 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-3xl font-bold text-gray-900">Partner Registration</h2>
-              <p className="text-gray-600 mt-1">Join Auto X as a service partner</p>
+              <p className="text-gray-600 mt-1">Join Auto X as a service partner in Sri Lanka</p>
             </div>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
               <X size={24} />
@@ -180,7 +187,7 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
           {/* Progress Bar */}
           <div className="mt-6">
             <div className="flex items-center justify-between mb-2">
-              {[1, 2, 3, 4, 5].map((step) => (
+              {[1, 2, 3, 4].map((step) => (
                 <div
                   key={step}
                   className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold ${
@@ -196,7 +203,7 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(currentStep / 5) * 100}%` }}
+                style={{ width: `${(currentStep / 4) * 100}%` }}
               />
             </div>
           </div>
@@ -208,7 +215,7 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
             <div className="space-y-8">
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">Choose Your Partner Type</h3>
-                <p className="text-gray-600">Select the type of services you want to provide</p>
+                <p className="text-gray-600">Select the type of services you want to provide in Sri Lanka</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-8">
@@ -226,11 +233,11 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
                     </div>
                     <h4 className="text-xl font-bold text-gray-900 mb-3">Vehicle Owner</h4>
                     <p className="text-gray-600 leading-relaxed">
-                      Rent out your construction vehicles, heavy machinery, and equipment to contractors and builders.
+                      Rent out your construction vehicles, heavy machinery, and equipment to contractors across Sri Lanka.
                     </p>
                     <ul className="mt-4 text-sm text-gray-500 space-y-1">
-                      <li>• Excavators, JCBs, Cranes</li>
-                      <li>• Trucks, Lorries, Trailers</li>
+                      <li>• JCBs, Excavators, Cranes</li>
+                      <li>• Lorries, Tippers, Bowsers</li>
                       <li>• Specialized Equipment</li>
                     </ul>
                   </div>
@@ -268,7 +275,7 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
             <div className="space-y-6">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Business Information</h3>
-                <p className="text-gray-600">Tell us about your business</p>
+                <p className="text-gray-600">Tell us about your business in Sri Lanka</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
@@ -315,7 +322,7 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    placeholder="business@example.com"
+                    placeholder="business@example.lk"
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors"
                   />
                 </div>
@@ -331,7 +338,7 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="+94 76 1098385"
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors"
                   />
                 </div>
@@ -339,31 +346,15 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
                 <div>
                   <label className="flex items-center text-sm font-semibold text-gray-700 mb-3">
                     <FileText size={16} className="mr-2" />
-                    Business License Number *
+                    Business Registration Number *
                   </label>
                   <input
                     type="text"
-                    name="businessLicense"
-                    value={formData.businessLicense}
+                    name="brNumber"
+                    value={formData.brNumber}
                     onChange={handleInputChange}
                     required
-                    placeholder="License number"
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center text-sm font-semibold text-gray-700 mb-3">
-                    <FileText size={16} className="mr-2" />
-                    Tax ID / EIN *
-                  </label>
-                  <input
-                    type="text"
-                    name="taxId"
-                    value={formData.taxId}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Tax identification number"
+                    placeholder="BR/PV/123456"
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors"
                   />
                 </div>
@@ -397,50 +388,34 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
                   onChange={handleInputChange}
                   required
                   rows={4}
-                  placeholder="Describe your business, experience, and what makes you unique..."
+                  placeholder="Describe your business, experience, and what makes you unique in Sri Lanka..."
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors resize-none"
                 />
               </div>
             </div>
           )}
 
-          {/* Step 3: Address & Location */}
+          {/* Step 3: Address & Services */}
           {currentStep === 3 && (
             <div className="space-y-6">
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Business Address</h3>
-                <p className="text-gray-600">Where is your business located?</p>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Location & Services</h3>
+                <p className="text-gray-600">Where is your business located and what services do you offer?</p>
               </div>
 
-              <div>
-                <label className="flex items-center text-sm font-semibold text-gray-700 mb-3">
-                  <MapPin size={16} className="mr-2" />
-                  Street Address *
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="123 Business Street"
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors"
-                />
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="flex items-center text-sm font-semibold text-gray-700 mb-3">
                     <MapPin size={16} className="mr-2" />
-                    City *
+                    Business Address *
                   </label>
                   <input
                     type="text"
-                    name="city"
-                    value={formData.city}
+                    name="address"
+                    value={formData.address}
                     onChange={handleInputChange}
                     required
-                    placeholder="City"
+                    placeholder="No. 123, Main Street, City"
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors"
                   />
                 </div>
@@ -448,33 +423,20 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
                 <div>
                   <label className="flex items-center text-sm font-semibold text-gray-700 mb-3">
                     <MapPin size={16} className="mr-2" />
-                    State *
+                    District *
                   </label>
-                  <input
-                    type="text"
-                    name="state"
-                    value={formData.state}
+                  <select
+                    name="district"
+                    value={formData.district}
                     onChange={handleInputChange}
                     required
-                    placeholder="State"
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center text-sm font-semibold text-gray-700 mb-3">
-                    <MapPin size={16} className="mr-2" />
-                    ZIP Code *
-                  </label>
-                  <input
-                    type="text"
-                    name="zipCode"
-                    value={formData.zipCode}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="12345"
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 transition-colors"
-                  />
+                  >
+                    <option value="">Select District</option>
+                    {sriLankanDistricts.map((district) => (
+                      <option key={district} value={district}>{district}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -519,22 +481,12 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
                   ))}
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* Step 4: Insurance & Banking */}
-          {currentStep === 4 && (
-            <div className="space-y-8">
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Insurance & Banking</h3>
-                <p className="text-gray-600">Financial and insurance information</p>
-              </div>
 
               {/* Insurance Details */}
               <div className="bg-blue-50 rounded-2xl p-6">
                 <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                   <Shield className="mr-2" />
-                  Insurance Information
+                  Insurance Information *
                 </h4>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -582,80 +534,11 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
                   </div>
                 </div>
               </div>
-
-              {/* Banking Details */}
-              <div className="bg-green-50 rounded-2xl p-6">
-                <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                  <CreditCard className="mr-2" />
-                  Banking Information
-                </h4>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
-                      Account Holder Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="bankDetails.accountHolderName"
-                      value={formData.bankDetails.accountHolderName}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Account holder name"
-                      className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
-                      Bank Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="bankDetails.bankName"
-                      value={formData.bankDetails.bankName}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Bank name"
-                      className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
-                      Account Number *
-                    </label>
-                    <input
-                      type="text"
-                      name="bankDetails.accountNumber"
-                      value={formData.bankDetails.accountNumber}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Account number"
-                      className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
-                      Routing Number *
-                    </label>
-                    <input
-                      type="text"
-                      name="bankDetails.routingNumber"
-                      value={formData.bankDetails.routingNumber}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Routing number"
-                      className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-colors"
-                    />
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
-          {/* Step 5: Document Upload */}
-          {currentStep === 5 && (
+          {/* Step 4: Document Upload */}
+          {currentStep === 4 && (
             <div className="space-y-6">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Document Upload</h3>
@@ -665,24 +548,24 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-orange-500 transition-colors">
                   <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h4 className="font-semibold text-gray-900 mb-2">Business License</h4>
-                  <p className="text-sm text-gray-600 mb-4">Upload your business license document</p>
+                  <h4 className="font-semibold text-gray-900 mb-2">Business Registration Certificate</h4>
+                  <p className="text-sm text-gray-600 mb-4">Upload your BR certificate</p>
                   <input
                     type="file"
                     accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={(e) => handleFileUpload(e, 'businessLicense')}
+                    onChange={(e) => handleFileUpload(e, 'brCertificate')}
                     className="hidden"
-                    id="businessLicense"
+                    id="brCertificate"
                   />
                   <label
-                    htmlFor="businessLicense"
+                    htmlFor="brCertificate"
                     className="bg-yellow-400 text-black px-4 py-2 rounded-lg cursor-pointer hover:bg-yellow-500 transition-colors"
                   >
                     Choose File
                   </label>
-                  {formData.documents.businessLicense && (
+                  {formData.documents.brCertificate && (
                     <p className="text-sm text-green-600 mt-2">
-                      ✓ {formData.documents.businessLicense.name}
+                      ✓ {formData.documents.brCertificate.name}
                     </p>
                   )}
                 </div>
@@ -710,55 +593,60 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
                     </p>
                   )}
                 </div>
-
-                <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-green-500 transition-colors">
-                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h4 className="font-semibold text-gray-900 mb-2">Tax Certificate</h4>
-                  <p className="text-sm text-gray-600 mb-4">Upload your tax registration certificate</p>
-                  <input
-                    type="file"
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={(e) => handleFileUpload(e, 'taxCertificate')}
-                    className="hidden"
-                    id="taxCertificate"
-                  />
-                  <label
-                    htmlFor="taxCertificate"
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-green-600 transition-colors"
-                  >
-                    Choose File
-                  </label>
-                  {formData.documents.taxCertificate && (
-                    <p className="text-sm text-green-600 mt-2">
-                      ✓ {formData.documents.taxCertificate.name}
-                    </p>
-                  )}
-                </div>
-
-                <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-purple-500 transition-colors">
-                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h4 className="font-semibold text-gray-900 mb-2">Bank Statement</h4>
-                  <p className="text-sm text-gray-600 mb-4">Upload recent bank statement</p>
-                  <input
-                    type="file"
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={(e) => handleFileUpload(e, 'bankStatement')}
-                    className="hidden"
-                    id="bankStatement"
-                  />
-                  <label
-                    htmlFor="bankStatement"
-                    className="bg-purple-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-purple-600 transition-colors"
-                  >
-                    Choose File
-                  </label>
-                  {formData.documents.bankStatement && (
-                    <p className="text-sm text-green-600 mt-2">
-                      ✓ {formData.documents.bankStatement.name}
-                    </p>
-                  )}
-                </div>
               </div>
+
+              {/* Vehicle Photos Upload for Vehicle Owners */}
+              {partnerType === 'vehicle_owner' && (
+                <div className="bg-yellow-50 rounded-2xl p-6">
+                  <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <Camera className="mr-2" />
+                    Vehicle Photos
+                  </h4>
+                  <p className="text-gray-600 mb-4">Upload photos of your vehicles to showcase them to potential customers</p>
+                  
+                  <div className="border-2 border-dashed border-yellow-300 rounded-xl p-6 text-center">
+                    <Camera className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={(e) => handleFileUpload(e, 'vehiclePhotos')}
+                      className="hidden"
+                      id="vehiclePhotos"
+                    />
+                    <label
+                      htmlFor="vehiclePhotos"
+                      className="bg-yellow-400 text-black px-6 py-3 rounded-lg cursor-pointer hover:bg-yellow-500 transition-colors"
+                    >
+                      Add Vehicle Photos
+                    </label>
+                  </div>
+
+                  {formData.documents.vehiclePhotos.length > 0 && (
+                    <div className="mt-4">
+                      <h5 className="font-semibold text-gray-900 mb-3">Uploaded Photos ({formData.documents.vehiclePhotos.length})</h5>
+                      <div className="grid grid-cols-3 gap-3">
+                        {formData.documents.vehiclePhotos.map((photo, index) => (
+                          <div key={index} className="relative">
+                            <img
+                              src={URL.createObjectURL(photo)}
+                              alt={`Vehicle ${index + 1}`}
+                              className="w-full h-20 object-cover rounded-lg"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeVehiclePhoto(index)}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
                 <div className="flex items-start">
@@ -770,6 +658,7 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
                       <li>• Accepted formats: PDF, JPG, JPEG, PNG</li>
                       <li>• Maximum file size: 10MB per document</li>
                       <li>• Documents will be verified within 2-3 business days</li>
+                      <li>• Vehicle photos help attract more customers</li>
                     </ul>
                   </div>
                 </div>
@@ -788,7 +677,7 @@ export const PartnerRegistration: React.FC<PartnerRegistrationProps> = ({ isOpen
               Previous
             </button>
 
-            {currentStep < 5 ? (
+            {currentStep < 4 ? (
               <button
                 type="button"
                 onClick={nextStep}

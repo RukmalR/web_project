@@ -22,14 +22,14 @@ export const Hero: React.FC<HeroProps> = ({ onServiceSelect }) => {
               <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
                 Build Your
                 <span className="text-yellow-500 block">Dreams</span>
-                <span className="text-gray-600 text-3xl lg:text-4xl font-normal block mt-2">
-                  with Premium Materials
+                <span className="text-gray-600 text-2xl lg:text-3xl font-normal block mt-2">
+                  Connect with Sri Lankan Suppliers
                 </span>
               </h1>
               
               <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
-                From foundation to finish, we supply premium construction materials and professional vehicles. 
-                Quality guaranteed, delivered on time, every time.
+                Connect directly with verified construction material suppliers and vehicle owners across Sri Lanka. 
+                Find what you need, contact suppliers directly, negotiate your own terms.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">

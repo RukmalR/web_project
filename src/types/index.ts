@@ -72,11 +72,9 @@ export interface Partner {
   email: string;
   phone: string;
   address: string;
-  city: string;
-  state: string;
-  zipCode: string;
+  district: string;
   businessLicense: string;
-  taxId: string;
+  brNumber: string;
   yearsInBusiness: number;
   description: string;
   services: string[];
@@ -86,23 +84,34 @@ export interface Partner {
     policyNumber: string;
     expiryDate: string;
   };
-  bankDetails: {
-    accountHolderName: string;
-    bankName: string;
-    accountNumber: string;
-    routingNumber: string;
-  };
   documents: {
     businessLicense: File | null;
     insurance: File | null;
-    taxCertificate: File | null;
-    bankStatement: File | null;
+    brCertificate: File | null;
+    vehiclePhotos?: File[];
   };
   status: 'pending' | 'approved' | 'rejected' | 'suspended';
   registrationDate: string;
   approvalDate?: string;
   rating: number;
   totalJobs: number;
+  notifications: Notification[];
+}
+
+export interface Notification {
+  id: string;
+  type: 'contact_request' | 'inquiry' | 'booking_request';
+  from: {
+    name: string;
+    phone: string;
+    email: string;
+    profileImage?: string;
+  };
+  message: string;
+  itemName: string;
+  itemType: 'material' | 'vehicle';
+  timestamp: string;
+  read: boolean;
 }
 
 export interface PartnerVehicle {

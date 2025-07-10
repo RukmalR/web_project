@@ -148,7 +148,7 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({ onBack, onRe
                     </button>
                   </div>
                   <p className="text-sm text-gray-500 text-center mt-4">
-                    Connect directly with the supplier to discuss your requirements
+                    Connect directly with the supplier. No payment through platform - negotiate directly.
                   </p>
                 </div>
 

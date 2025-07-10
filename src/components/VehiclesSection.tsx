@@ -162,7 +162,7 @@ export const VehiclesSection: React.FC<VehiclesSectionProps> = ({ onBack, onRequ
                     </button>
                   </div>
                   <p className="text-sm text-gray-500 text-center mt-4">
-                    Connect directly with the vehicle owner to discuss rental terms
+                    Connect directly with the vehicle owner. No payment through platform - negotiate directly.
                   </p>
                 </div>
 

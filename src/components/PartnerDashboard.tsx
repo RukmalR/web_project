@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Plus, Edit, Trash2, Eye, Star, TrendingUp, DollarSign, Calendar, Settings } from 'lucide-react';
-import { Partner, PartnerVehicle, PartnerMaterial } from '../types';
+import { Plus, Edit, Eye, Star, Bell, Settings, User, MapPin, Phone, Camera, Upload } from 'lucide-react';
+import { Partner, PartnerVehicle, PartnerMaterial, Notification } from '../types';
 
 interface PartnerDashboardProps {
   partner: Partner;
@@ -9,15 +9,72 @@ interface PartnerDashboardProps {
 }
 
 export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, vehicles = [], materials = [] }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'listings' | 'bookings' | 'earnings' | 'profile'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'listings' | 'notifications' | 'profile'>('overview');
+  const [notifications] = useState<Notification[]>([
+    {
+      id: '1',
+      type: 'contact_request',
+      from: {
+        name: 'Saman Perera',
+        phone: '+94 77 1234567',
+        email: 'saman@example.lk',
+        profileImage: ''
+      },
+      message: 'Hi, I need your JCB for a construction project in Colombo. Can you provide availability and rates?',
+      itemName: 'JCB 3CX Backhoe Loader',
+      itemType: 'vehicle',
+      timestamp: '2024-01-15T10:30:00Z',
+      read: false
+    },
+    {
+      id: '2',
+      type: 'inquiry',
+      from: {
+        name: 'Nimal Silva',
+        phone: '+94 76 9876543',
+        email: 'nimal@construction.lk'
+      },
+      message: 'I need 10 cubic meters of river sand for my project. What is your best price?',
+      itemName: 'Premium River Sand',
+      itemType: 'material',
+      timestamp: '2024-01-15T09:15:00Z',
+      read: false
+    },
+    {
+      id: '3',
+      type: 'contact_request',
+      from: {
+        name: 'Kamala Fernando',
+        phone: '+94 75 5555555',
+        email: 'kamala@builders.lk'
+      },
+      message: 'Looking for a reliable tipper truck for material transportation. Are you available next week?',
+      itemName: 'TATA 1613 Tipper',
+      itemType: 'vehicle',
+      timestamp: '2024-01-14T16:45:00Z',
+      read: true
+    }
+  ]);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   const stats = {
     totalListings: partner.type === 'vehicle_owner' ? vehicles.length : materials.length,
     activeListings: partner.type === 'vehicle_owner' 
       ? vehicles.filter(v => v.status === 'active').length 
       : materials.filter(m => m.status === 'active').length,
-    totalEarnings: 15420, // Mock data
-    monthlyBookings: 23 // Mock data
+    totalInquiries: notifications.length,
+    responseRate: 98
+  };
+
+  const formatTimeAgo = (timestamp: string) => {
+    const now = new Date();
+    const time = new Date(timestamp);
+    const diffInHours = Math.floor((now.getTime() - time.getTime()) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    return `${Math.floor(diffInHours / 24)}d ago`;
   };
 
   return (
@@ -51,21 +108,25 @@ export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, veh
           <div className="flex space-x-8">
             {[
               { id: 'overview', label: 'Overview' },
-              { id: 'listings', label: partner.type === 'vehicle_owner' ? 'Vehicles' : 'Materials' },
-              { id: 'bookings', label: 'Bookings' },
-              { id: 'earnings', label: 'Earnings' },
+              { id: 'listings', label: partner.type === 'vehicle_owner' ? 'My Vehicles' : 'My Materials' },
+              { id: 'notifications', label: 'Notifications', badge: unreadCount },
               { id: 'profile', label: 'Profile' }
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
+                className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors relative ${
                   activeTab === tab.id
                     ? 'border-yellow-500 text-yellow-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
                 {tab.label}
+                {tab.badge && tab.badge > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {tab.badge}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -105,11 +166,11 @@ export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, veh
               <div className="bg-white rounded-2xl p-6 shadow-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-600 text-sm">Monthly Bookings</p>
-                    <p className="text-3xl font-bold text-gray-900">{stats.monthlyBookings}</p>
+                    <p className="text-gray-600 text-sm">Total Inquiries</p>
+                    <p className="text-3xl font-bold text-gray-900">{stats.totalInquiries}</p>
                   </div>
                   <div className="bg-orange-100 p-3 rounded-xl">
-                    <Calendar className="w-6 h-6 text-orange-600" />
+                    <Bell className="w-6 h-6 text-orange-600" />
                   </div>
                 </div>
               </div>
@@ -117,59 +178,40 @@ export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, veh
               <div className="bg-white rounded-2xl p-6 shadow-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-600 text-sm">Total Earnings</p>
-                    <p className="text-3xl font-bold text-gray-900">Rs. {(stats.totalEarnings * 265).toLocaleString()}</p>
+                    <p className="text-gray-600 text-sm">Response Rate</p>
+                    <p className="text-3xl font-bold text-gray-900">{stats.responseRate}%</p>
                   </div>
                   <div className="bg-purple-100 p-3 rounded-xl">
-                    <DollarSign className="w-6 h-6 text-purple-600" />
+                    <Star className="w-6 h-6 text-purple-600" />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Recent Activity */}
-            <div className="grid lg:grid-cols-2 gap-8">
-              <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Recent Bookings</h3>
-                <div className="space-y-4">
-                  {[1, 2, 3].map((booking) => (
-                    <div key={booking} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                      <div>
-                        <p className="font-semibold text-gray-900">JCB Excavator Rental</p>
-                        <p className="text-sm text-gray-600">John Construction Co.</p>
+            {/* Recent Inquiries */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <h3 className="text-xl font-bold text-gray-900 mb-6">Recent Customer Inquiries</h3>
+              <div className="space-y-4">
+                {notifications.slice(0, 3).map((notification) => (
+                  <div key={notification.id} className="flex items-start p-4 bg-gray-50 rounded-xl">
+                    <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mr-4">
+                      <User className="w-6 h-6 text-yellow-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-semibold text-gray-900">{notification.from.name}</h4>
+                        <span className="text-sm text-gray-500">{formatTimeAgo(notification.timestamp)}</span>
                       </div>
-                      <div className="text-right">
-                        <p className="font-semibold text-green-600">Rs. 126,000</p>
-                        <p className="text-sm text-gray-500">2 days</p>
+                      <p className="text-gray-600 text-sm mb-2">{notification.message}</p>
+                      <div className="flex items-center text-xs text-gray-500">
+                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full mr-2">
+                          {notification.itemName}
+                        </span>
+                        <span>{notification.from.phone}</span>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Performance Metrics</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Response Rate</span>
-                    <span className="font-semibold text-gray-900">98%</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Customer Rating</span>
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="ml-1 font-semibold text-gray-900">{partner.rating.toFixed(1)}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Completion Rate</span>
-                    <span className="font-semibold text-gray-900">96%</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Total Jobs</span>
-                    <span className="font-semibold text-gray-900">{partner.totalJobs}</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -188,117 +230,152 @@ export const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ partner, veh
               </button>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {partner.type === 'vehicle_owner' ? (
-                vehicles.map((vehicle) => (
-                  <div key={vehicle.id} className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                    <img 
-                      src={vehicle.images[0] || 'https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800'} 
-                      alt={vehicle.name}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-xl font-bold text-gray-900">{vehicle.name}</h3>
-                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          vehicle.status === 'active' 
-                            ? 'bg-green-100 text-green-800'
-                            : vehicle.status === 'maintenance'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {vehicle.status}
-                        </div>
-                      </div>
-                      <p className="text-gray-600 mb-4">{vehicle.description}</p>
-                      <div className="flex justify-between items-center mb-4">
-                        <div>
-                          <span className="text-lg font-bold text-orange-600">Rs. {vehicle.pricePerHour.toLocaleString()}/hr</span>
-                          <span className="text-gray-500 ml-2">Rs. {vehicle.pricePerDay.toLocaleString()}/day</span>
-                        </div>
-                      </div>
-                      <div className="flex space-x-2">
-                        <button className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center">
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit
-                        </button>
-                        <button className="flex-1 bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition-colors flex items-center justify-center">
-                          <Eye className="w-4 h-4 mr-2" />
-                          View
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                materials.map((material) => (
-                  <div key={material.id} className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                    <img 
-                      src={material.images[0] || 'https://images.pexels.com/photos/1029604/pexels-photo-1029604.jpeg?auto=compress&cs=tinysrgb&w=800'} 
-                      alt={material.name}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-xl font-bold text-gray-900">{material.name}</h3>
-                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          material.status === 'active' 
-                            ? 'bg-green-100 text-green-800'
-                            : material.status === 'out_of_stock'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {material.status.replace('_', ' ')}
-                        </div>
-                      </div>
-                      <p className="text-gray-600 mb-4">{material.description}</p>
-                      <div className="flex justify-between items-center mb-4">
-                        <div>
-                          <span className="text-lg font-bold text-yellow-600">Rs. {material.pricePerUnit.toLocaleString()}</span>
-                          <span className="text-gray-500 ml-1">per {material.unit}</span>
-                        </div>
-                        <span className="text-sm text-gray-500">{material.availableQuantity} {material.unit} available</span>
-                      </div>
-                      <div className="flex space-x-2">
-                        <button className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center">
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit
-                        </button>
-                        <button className="flex-1 bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition-colors flex items-center justify-center">
-                          <Eye className="w-4 h-4 mr-2" />
-                          View
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
+            <div className="bg-white rounded-2xl p-6 shadow-lg text-center">
+              <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Manage Your Listings</h3>
+              <p className="text-gray-600 mb-6">
+                Add photos and details of your {partner.type === 'vehicle_owner' ? 'vehicles' : 'materials'} to attract more customers
+              </p>
+              <button className="bg-yellow-400 text-black px-6 py-3 rounded-xl hover:bg-yellow-500 transition-colors">
+                Create First Listing
+              </button>
             </div>
           </div>
         )}
 
-        {/* Other tabs would be implemented similarly */}
-        {activeTab === 'bookings' && (
-          <div className="bg-white rounded-2xl p-8 shadow-lg text-center">
-            <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Bookings Management</h3>
-            <p className="text-gray-600">View and manage your bookings and reservations</p>
+        {/* Notifications Tab */}
+        {activeTab === 'notifications' && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">Customer Inquiries</h2>
+              <span className="text-sm text-gray-600">{unreadCount} unread</span>
+            </div>
+
+            <div className="space-y-4">
+              {notifications.map((notification) => (
+                <div 
+                  key={notification.id} 
+                  className={`bg-white rounded-2xl p-6 shadow-lg border-l-4 ${
+                    notification.read ? 'border-gray-200' : 'border-yellow-400'
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <User className="w-6 h-6 text-yellow-600" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <h4 className="font-bold text-gray-900">{notification.from.name}</h4>
+                          {!notification.read && (
+                            <span className="bg-yellow-400 text-black text-xs px-2 py-1 rounded-full">New</span>
+                          )}
+                        </div>
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Phone className="w-4 h-4 mr-2" />
+                            {notification.from.phone}
+                          </div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <MapPin className="w-4 h-4 mr-2" />
+                            Interested in: {notification.itemName}
+                          </div>
+                        </div>
+                        <p className="text-gray-700 bg-gray-50 p-3 rounded-lg">{notification.message}</p>
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-500">{formatTimeAgo(notification.timestamp)}</span>
+                  </div>
+                  
+                  <div className="mt-4 flex space-x-3">
+                    <button 
+                      onClick={() => window.open(`tel:${notification.from.phone}`, '_self')}
+                      className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center"
+                    >
+                      <Phone className="w-4 h-4 mr-2" />
+                      Call Customer
+                    </button>
+                    <button 
+                      onClick={() => {
+                        const message = `Hi ${notification.from.name}, thank you for your inquiry about ${notification.itemName}. I'd be happy to help you.`;
+                        const whatsappUrl = `https://wa.me/${notification.from.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+                        window.open(whatsappUrl, '_blank');
+                      }}
+                      className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center"
+                    >
+                      <Bell className="w-4 h-4 mr-2" />
+                      Send Message
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        {activeTab === 'earnings' && (
-          <div className="bg-white rounded-2xl p-8 shadow-lg text-center">
-            <TrendingUp className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Earnings Analytics</h3>
-            <p className="text-gray-600">Track your earnings and financial performance</p>
-          </div>
-        )}
-
+        {/* Profile Tab */}
         {activeTab === 'profile' && (
-          <div className="bg-white rounded-2xl p-8 shadow-lg text-center">
-            <Settings className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Profile Settings</h3>
-            <p className="text-gray-600">Manage your business profile and account settings</p>
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900">Business Profile</h2>
+            
+            <div className="bg-white rounded-2xl p-8 shadow-lg">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">Business Information</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">Business Name</label>
+                      <div className="bg-gray-50 rounded-lg px-4 py-3 text-gray-900">{partner.businessName}</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">Owner Name</label>
+                      <div className="bg-gray-50 rounded-lg px-4 py-3 text-gray-900">{partner.ownerName}</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">Email</label>
+                      <div className="bg-gray-50 rounded-lg px-4 py-3 text-gray-900">{partner.email}</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">Phone</label>
+                      <div className="bg-gray-50 rounded-lg px-4 py-3 text-gray-900">{partner.phone}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">Location & Services</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">Address</label>
+                      <div className="bg-gray-50 rounded-lg px-4 py-3 text-gray-900">{partner.address}</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">District</label>
+                      <div className="bg-gray-50 rounded-lg px-4 py-3 text-gray-900">{partner.district}</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">Services</label>
+                      <div className="bg-gray-50 rounded-lg px-4 py-3">
+                        <div className="flex flex-wrap gap-2">
+                          {partner.services.map((service, index) => (
+                            <span key={index} className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm">
+                              {service}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <button className="bg-yellow-400 text-black px-6 py-3 rounded-xl hover:bg-yellow-500 transition-colors flex items-center">
+                  <Edit className="w-5 h-5 mr-2" />
+                  Edit Profile
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
