@@ -94,6 +94,14 @@ export const Header: React.FC<HeaderProps> = ({
                   {item.label}
                 </button>
               ))}
+              {!user && (
+                <button
+                  onClick={() => onNavigate('partner-dashboard')}
+                  className="text-gray-700 hover:text-green-600 transition-colors font-medium py-2 border-b-2 border-transparent hover:border-green-500 bg-green-50 px-4 rounded-lg"
+                >
+                  Become Partner
+                </button>
+              )}
             </nav>
 
             <div className="flex items-center space-x-4">

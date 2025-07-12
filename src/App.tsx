@@ -6,6 +6,9 @@ import { VehiclesSection } from './components/VehiclesSection';
 import { ServicesPage } from './components/ServicesPage';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
+import { GuestMaterialPage } from './components/GuestMaterialPage';
+import { GuestVehiclePage } from './components/GuestVehiclePage';
+import { GuestPartnerPage } from './components/GuestPartnerPage';
 import { AuthModal } from './components/AuthModal';
 import { ServiceRequestModal } from './components/ServiceRequestModal';
 import { PartnerRegistration } from './components/PartnerRegistration';
@@ -58,10 +61,6 @@ function App() {
   };
 
   const handleServiceSelect = (service: 'materials' | 'vehicles') => {
-    if (!user) {
-      setIsAuthModalOpen(true);
-      return;
-    }
     setCurrentView(service);
   };
 
@@ -137,8 +136,30 @@ function App() {
         return <AboutPage />;
       case 'contact':
         return <ContactPage />;
+      case 'materials':
+        return user ? (
+          <MaterialsSection
+            onBack={() => setCurrentView('home')}
+            onRequestService={handleMaterialRequest}
+          />
+        ) : (
+          <GuestMaterialPage onSignUp={() => setIsAuthModalOpen(true)} />
+        );
+      case 'vehicles':
+        return user ? (
+          <VehiclesSection
+            onBack={() => setCurrentView('home')}
+            onRequestService={handleVehicleRequest}
+          />
+        ) : (
+          <GuestVehiclePage onSignUp={() => setIsAuthModalOpen(true)} />
+        );
       case 'partner-dashboard':
-        return partner ? <PartnerDashboard partner={partner} /> : <Hero onServiceSelect={handleServiceSelect} />;
+        return partner ? (
+          <PartnerDashboard partner={partner} />
+        ) : (
+          <GuestPartnerPage onSignUp={() => setIsPartnerRegistrationOpen(true)} />
+        );
       default:
         return <Hero onServiceSelect={handleServiceSelect} />;
     }
@@ -160,7 +181,7 @@ function App() {
       {renderCurrentView()}
 
       {/* Partner Registration CTA */}
-      {currentView === 'home' && (
+      {currentView === 'home' && user && (
         <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center text-white">
